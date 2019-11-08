@@ -6,7 +6,7 @@ a Simple Movie Sorter app with 2 supported language (English/Persian)
 ## Requirements
 1- Python 3.7. Python 3.6 might work too.
 
-2- Used librarys, run:
+2- Used Libraries, run:
 ```bash
 pip install EasySettings
 pip install tkinter
