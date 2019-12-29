@@ -13,7 +13,7 @@ if not settings.has_option('Language'):
         settings.set("Language", "English")
     settings.save()
 if settings.get('Language') == 'Persian':
-    nameOfProgram = "Movie Grouper"
+    nameOfProgram = "Movie Sorter"
     chooseFileName = "انتخاب فایل"
     quitText = 'خروج'
     startText = 'شروع دسته بندی'
@@ -35,7 +35,7 @@ if settings.get('Language') == 'Persian':
     openText = "باز کردن"
 
 else:
-    nameOfProgram = "Movie Grouper"
+    nameOfProgram = "Movie Sorter"
     chooseFileName = "Choose Directory"
     quitText = 'Quit'
     startText = 'Start Grouping'
@@ -59,7 +59,6 @@ else:
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
@@ -272,9 +271,7 @@ if __name__ == '__main__':
                                 ...
                             else:
                                 folderName += s
-
                             break
-                            ...
                         else:
                             folderName += s + " "
                     else:
