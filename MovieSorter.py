@@ -1,6 +1,6 @@
 import os
 import locale
-from tkinter import messagebox, Menu
+from tkinter import messagebox, Menu, Entry
 from tkinter.filedialog import askdirectory, re, Frame, Checkbutton, Button, LEFT, RIGHT, TOP, BOTTOM, W, E, Tk, \
     StringVar, Label, IntVar, YES, X, sys
 from easysettings import EasySettings
@@ -144,16 +144,19 @@ if __name__ == '__main__':
     menubar.add_cascade(label="Help", menu=subMenu)
     subMenu.add_command(label=infoText,command=about)
     subMenu.add_command(label=changeLanguage,command=changeLanguageEvent)
-
     root.iconbitmap(resource_path('Logo.ico'))
     var = StringVar()
     Label(root, textvariable=var, anchor=getAncher).pack(side=TOP, fill='both')
     var.set(settingsText)
     willRemove = CheckBar(root, [folderForEpisodes, putYearInBrackets])
     willRename = CheckBar(root, [nameChange], defaultcheck=True)
+
     videoFiles = CheckBar(root, [moviesText, seriesText , '.mkv' , '.mp4' , '.avi' , '.srt','.zip'],defaultcheck=True)
+    modelCreator = Entry(root)
+    modelCreator.pack(side=TOP, fill=X)
     willRemove.pack(side=TOP, fill=X)
     willRename.pack(side=TOP, fill=X)
+
     frame = Frame(root, width=1, height=1, highlightbackground="black", highlightcolor="black", highlightthickness=3,
                   bd=0).pack(side=TOP, fill=X)
     var1 = StringVar()
@@ -178,7 +181,7 @@ if __name__ == '__main__':
 
 
 
-    def allstates():
+    def createFolder():
         list(videoFiles.state())[3]
         for file in os.listdir(chooseDirString):
             if file.lower().endswith(".mkv") and list(videoFiles.state())[2] == 1:
@@ -259,13 +262,17 @@ if __name__ == '__main__':
                 folderName = ""
                 print(folderWords)
                 firstS = True
+                year = 0000
+                name = ""
                 for s in folderWords:
                     if (firstS):
                         firstS = False
                         folderName += str(s) + " "
+                        name += str(s)
                         continue
                     if s.isdigit():
                         if int(s) > 1900 and int(s) < 3000:
+                            year = int(s)
                             if list(willRemove.state())[1] == 1:
                                 folderName += "(" + s + ")"
                                 ...
@@ -273,12 +280,17 @@ if __name__ == '__main__':
                                 folderName += s
                             break
                         else:
+                            name += s + " "
                             folderName += s + " "
                     else:
                         folderName += s + " "
 
                 if folderName.endswith(" "):
                     folderName = folderName[:-1]
+                if modelCreator.get() != '':
+                    folderName = str(modelCreator.get())
+                    folderName = folderName.replace('&year',str(year))
+                    folderName = folderName.replace('&name', str(name))
                 newDir = chooseDirString
                 newDir = newDir + "\\" + folderName
                 try:
@@ -331,7 +343,7 @@ if __name__ == '__main__':
     Frame(root, width=10, height=1,bd=0).pack(side=RIGHT)
     Frame(root, width=5, height=5,bd=0).pack(side=TOP, fill=X)
     Button(root, text=quitText, command=root.quit).pack(side=last)
-    Button(root, textvariable=numberOfFilesVar, command=allstates).pack(side=first)
+    Button(root, textvariable=numberOfFilesVar, command=createFolder).pack(side=first)
     Frame(root, width=1, height=35,bd=0).pack(side=BOTTOM, fill=X)
     root.title(nameOfProgram)
     root.mainloop()
