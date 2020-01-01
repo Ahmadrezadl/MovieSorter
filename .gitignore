@@ -1,6 +1,4 @@
 .idea/*
 out/*
 *.iml
-musics.txt
-playLists.txt
-username.txt
+settings.conf
