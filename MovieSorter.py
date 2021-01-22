@@ -129,9 +129,10 @@ if __name__ == '__main__':
     numberOfFiles = 0
     numberOfFilesVar = StringVar()
     def openAll():
+        if len(chooseDirString) < 2:
+            return
         for root, dirs, files in os.walk(chooseDirString):
             for file in files:
-                print(os.path.join(root, file))
                 os.rename(os.path.join(root, file), chooseDirString + "\\" + file)
             if not os.listdir(root):
                 os.rmdir(root)
