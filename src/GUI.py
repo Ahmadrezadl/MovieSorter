@@ -62,7 +62,7 @@ def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath(".")
+        base_path = os.path.abspath("..")
     return os.path.join(base_path, relative_path)
 
 
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     menubar.add_cascade(label="Help", menu=subMenu)
     subMenu.add_command(label=infoText, command=about)
     subMenu.add_command(label=changeLanguage, command=changeLanguageEvent)
-    root.iconbitmap(resource_path('Logo.ico'))
+    root.iconbitmap(resource_path('resources/Logo.ico'))
 
     Label(root, text=nameFormat, anchor=getAncher).pack(side=TOP, fill='both')
     formatString = StringVar()
