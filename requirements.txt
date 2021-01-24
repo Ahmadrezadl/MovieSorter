@@ -1,0 +1,2 @@
+click>=7.1.2
+EasySettings>=4.0.0

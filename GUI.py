@@ -1,5 +1,4 @@
 import ctypes
-import sys
 import os
 from tkinter import *
 from tkinter import messagebox, filedialog
