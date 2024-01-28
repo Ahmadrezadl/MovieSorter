@@ -10,6 +10,8 @@ if not settings.has_option('Language'):
     settings.save()
 if settings.get('Language') == 'Persian':
     nameOfProgram = "Movie Sorter"
+    startGrouping = "شروع دسته بندی {0} فایل"
+    areYouSureUnfolder = "تمامی فایل های داخل فولدر ها، از فولدر ها خارج میشوند. اطمینان دارید؟"
     chooseFileName = "انتخاب فایل"
     quitText = 'خروج'
     startText = 'شروع دسته بندی'
@@ -31,9 +33,14 @@ if settings.get('Language') == 'Persian':
     changeLanguage = "English"
     exitText = "خروج"
     openText = "باز کردن"
+    done = "انجام شد"
+    unfoldered = "تمامی فولدر ها باز شد"
+
 
 else:
     nameOfProgram = "Movie Sorter"
+    startGrouping = "Start Grouping {0} Files"
+    areYouSureUnfolder = "This will cause all files to be extracted from the folders, are you sure?"
     chooseFileName = "Choose Directory"
     quitText = 'Quit'
     startText = 'Start Grouping'
@@ -48,10 +55,12 @@ else:
     getAncher = 'w'
     first = 'left'
     last = 'right'
-    unfolderString='Unfolder all folders'
+    unfolderString = 'Extract all folders'
     chooseDirText = 'Choose Folder Directory'
     completeMessage = "Completed!"
     nameChange = "Same Name for Subtitle and Movie"
     changeLanguage = "فارسی"
     exitText = "Exit"
     openText = "Open"
+    done = "Done"
+    unfoldered = "All folders extracted!"
