@@ -41,6 +41,16 @@ MovieSorter --help
 ```
 
 This command will display help information, including a list of command-line arguments and options that you can use with MovieSorter.
+
+
+### Use Source code:
+If you prefer run the source code directly, you can use this command:
+```bash
+git clone https://github.com/Ahmadrezadl/MovieSorter.git
+cd MovieSorter
+python -m src.GUI
+```
+
 ## Contributing
 Contributions to MovieSorter are welcome! Feel free to fork the repository, make your improvements, and submit a pull request. 
 
