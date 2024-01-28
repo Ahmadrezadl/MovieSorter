@@ -37,7 +37,7 @@ def chooseDir():
 
 
 def about():
-    ctypes.windll.user32.MessageBoxW(0, "An App By: Ahmad Reza Kamali & Mahdi Sabour", infoText, 0)
+    ctypes.windll.user32.MessageBoxW(0, "An App By: Ahmadrezadl\nVersion 2.0.0", infoText, 0)
 
 
 def changeLanguageEvent():
