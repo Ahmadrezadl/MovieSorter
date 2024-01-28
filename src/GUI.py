@@ -3,8 +3,8 @@ import os
 import sys
 from tkinter import *
 from tkinter import messagebox, filedialog
-from load_language import *
-from logic import create_folders_for_files, move_files_to_root_and_remove_empty_dirs
+from .localization import *
+from .logic import create_folders_for_files, move_files_to_root_and_remove_empty_dirs
 
 
 def choose_dir():
@@ -33,7 +33,7 @@ def choose_dir():
             number_of_files += 1
 
 
-    number_of_files_var.set(startGrouping.replace("{0}",str(number_of_files)))
+    number_of_files_var.set(startGrouping.replace("{0}", str(number_of_files)))
 
 
 def about():
@@ -70,22 +70,21 @@ def un_folder_button_action(choose_dir_string):
                                  areYouSureUnfolder)
     if answer:
         move_files_to_root_and_remove_empty_dirs(choose_dir_string)
-        messagebox.showinfo(done,unfoldered)
+        messagebox.showinfo(done, unfoldered)
 
 
 
-
-if __name__ == '__main__':
+def main():
     root = Tk()
     var_mkvFormat = BooleanVar()
-    var_mp4Format= BooleanVar()
-    var_aviFormat= BooleanVar()
-    var_srtFormat= BooleanVar()
-    var_zipFormat= BooleanVar()
-    var_sameName= BooleanVar()
-    var_serialFiles= BooleanVar()
-    var_movieFiles= BooleanVar()
-    var_episodeFolders =  BooleanVar()
+    var_mp4Format = BooleanVar()
+    var_aviFormat = BooleanVar()
+    var_srtFormat = BooleanVar()
+    var_zipFormat = BooleanVar()
+    var_sameName = BooleanVar()
+    var_serialFiles = BooleanVar()
+    var_movieFiles = BooleanVar()
+    var_episodeFolders = BooleanVar()
     root.resizable(False, False)
     menubar = Menu(root)
     sub_menu = Menu(menubar, tearoff=0)
@@ -98,7 +97,7 @@ if __name__ == '__main__':
     menubar.add_cascade(label="Help", menu=sub_menu)
     sub_menu.add_command(label=infoText, command=about)
     sub_menu.add_command(label=changeLanguage, command=change_language_event)
-    root.iconbitmap(resource_path('resources/Logo.ico'))
+    # root.iconbitmap(resource_path('resources/Logo.ico'))
 
     Label(root, text=nameFormat, anchor=getAncher).pack(side=TOP, fill='both')
     format_string = StringVar()
@@ -119,9 +118,8 @@ if __name__ == '__main__':
     same_name.pack(side=TOP, fill=X)
     same_name.select()
 
-
     Frame(root, width=1, height=1, highlightbackground="black", highlightcolor="black", highlightthickness=3,
-                  bd=0).pack(side=TOP, fill=X)
+          bd=0).pack(side=TOP, fill=X)
 
     Label(root, text=formatsText, anchor=getAncher).pack(side=TOP, fill='both')
 
@@ -153,8 +151,7 @@ if __name__ == '__main__':
     zip_check_button = Checkbutton(formats, text="zip", anchor=getAncher, var=var_zipFormat)
     zip_check_button.pack(side=LEFT)
 
-    formats.pack(side=TOP, fill=X,anchor=getAncher)
-
+    formats.pack(side=TOP, fill=X, anchor=getAncher)
 
     Frame(root, width=1, height=1, highlightbackground="black", highlightcolor="black", highlightthickness=3,
           bd=0).pack(side=TOP, fill=X)
@@ -170,8 +167,15 @@ if __name__ == '__main__':
     Frame(root, width=10, height=1, bd=0).pack(side=RIGHT)
     Frame(root, width=5, height=5, bd=0).pack(side=TOP, fill=X)
     Button(root, text=quitText, command=root.quit).pack(side=last)
-    Button(root, textvariable=number_of_files_var, command=lambda :create_folders_for_files(choose_dir_string, format_string.get(), var_mkvFormat, var_mp4Format, var_aviFormat, var_srtFormat, var_zipFormat, var_sameName, var_serialFiles, var_movieFiles, var_episodeFolders)).pack(side=first)
+    Button(root, textvariable=number_of_files_var,
+           command=lambda: create_folders_for_files(choose_dir_string, format_string.get(), var_mkvFormat,
+                                                    var_mp4Format, var_aviFormat, var_srtFormat, var_zipFormat,
+                                                    var_sameName, var_serialFiles, var_movieFiles,
+                                                    var_episodeFolders)).pack(side=first)
     Frame(root, width=1, height=35, bd=0).pack(side=BOTTOM, fill=X)
     root.title(nameOfProgram)
     root.mainloop()
+
+if __name__ == '__main__':
+    main()
 

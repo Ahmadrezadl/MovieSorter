@@ -1,5 +1,5 @@
 import click
-from logic import create_folders_for_files
+from .logic import create_folders_for_files
 
 @click.command()
 @click.argument('directory')

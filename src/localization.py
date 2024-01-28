@@ -1,7 +1,8 @@
 import locale
 from easysettings import EasySettings
 
-settings = EasySettings("../resources/settings.conf")
+settings = EasySettings("settings.conf")
+
 if not settings.has_option('Language'):
     if locale.getdefaultlocale() == "fa_IR":
         settings.set("Language", "Persian")
