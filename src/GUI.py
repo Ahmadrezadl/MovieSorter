@@ -73,7 +73,6 @@ if __name__ == '__main__':
     var_aviFormat= BooleanVar()
     var_srtFormat= BooleanVar()
     var_zipFormat= BooleanVar()
-    var_yearInBracket= BooleanVar()
     var_sameName= BooleanVar()
     var_serialFiles= BooleanVar()
     var_movieFiles= BooleanVar()
@@ -94,7 +93,7 @@ if __name__ == '__main__':
 
     Label(root, text=nameFormat, anchor=getAncher).pack(side=TOP, fill='both')
     formatString = StringVar()
-    formatString.set("{name} {year}")
+    formatString.set("{name} ({year})")
     formatTextField = Entry(root, textvariable=formatString, font="Arial 15")
     formatTextField.pack(side=TOP, fill=X)
 
@@ -103,9 +102,9 @@ if __name__ == '__main__':
     folderEpisodesCheckButton = Checkbutton(root, text=folderForEpisodes,anchor=getAncher,var=var_episodeFolders)
     folderEpisodesCheckButton.pack(side=TOP, fill=X)
 
-    putYearInBracketsCheckButton = Checkbutton(root, text=putYearInBrackets,anchor=getAncher,var=var_yearInBracket)
-    putYearInBracketsCheckButton.pack(side=TOP, fill=X)
-    putYearInBracketsCheckButton.select()
+    # putYearInBracketsCheckButton = Checkbutton(root, text=putYearInBrackets,anchor=getAncher,var=var_yearInBracket)
+    # putYearInBracketsCheckButton.pack(side=TOP, fill=X)
+    # putYearInBracketsCheckButton.select()
 
     sameName = Checkbutton(root, text=nameChange,anchor=getAncher,var=var_sameName)
     sameName.pack(side=TOP, fill=X)
@@ -162,7 +161,7 @@ if __name__ == '__main__':
     Frame(root, width=10, height=1, bd=0).pack(side=RIGHT)
     Frame(root, width=5, height=5, bd=0).pack(side=TOP, fill=X)
     Button(root, text=quitText, command=root.quit).pack(side=last)
-    Button(root, textvariable=numberOfFilesVar,command=lambda :create_folders_for_files(chooseDirString,formatString.get(),var_mkvFormat,var_mp4Format,var_aviFormat,var_srtFormat,var_zipFormat,var_yearInBracket,var_sameName,var_serialFiles,var_movieFiles,var_episodeFolders)).pack(side=first)
+    Button(root, textvariable=numberOfFilesVar,command=lambda :create_folders_for_files(chooseDirString,formatString.get(),var_mkvFormat,var_mp4Format,var_aviFormat,var_srtFormat,var_zipFormat,var_sameName,var_serialFiles,var_movieFiles,var_episodeFolders)).pack(side=first)
     Frame(root, width=1, height=35, bd=0).pack(side=BOTTOM, fill=X)
     root.title(nameOfProgram)
     root.mainloop()
