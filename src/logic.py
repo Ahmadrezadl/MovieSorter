@@ -1,129 +1,104 @@
 import os
 import re
 
+# Constants for file types
+FILE_TYPES = {
+    'mkv': '.mkv',
+    'mp4': '.mp4',
+    'avi': '.avi',
+    'srt': '.srt',
+    'zip': '.zip'
+}
+SEASON_EPISODE_PATTERN = re.compile(r'^(S|s)(\d{2})(E|e)(\d{2})$')
 
-def openAll(directory):
+
+def move_files_to_root_and_remove_empty_dirs(directory):
+    """Move all files from subdirectories to the root and remove empty directories."""
     if len(directory) < 2:
         return
     for root, dirs, files in os.walk(directory):
         for file in files:
-            os.rename(os.path.join(root, file), directory + "\\" + file)
+            os.rename(os.path.join(root, file), os.path.join(directory, file))
         if not os.listdir(root):
             os.rmdir(root)
 
-def createFolder(directory,nameFormat,mkvFormat,mp4Format,aviFormat,srtFormat,zipFormat,yearInBracket,sameName,serialFiles,movieFiles,episodeFolders):
+
+def create_folders_for_files(directory, name_format, formats, year_in_bracket, rename_subtitle):
+    """Organize files into folders based on the file type and name."""
     for file in os.listdir(directory):
-        if file.lower().endswith(".mkv") and mkvFormat:
-            folder_name = file.replace(".mkv", "")
-        elif file.lower().endswith(".mp4") and mp4Format:
-            folder_name = file.replace(".mp4", "")
-        elif file.lower().endswith(".avi") and aviFormat:
-            folder_name = file.replace(".avi", "")
-        elif file.lower().endswith(".srt") and srtFormat:
-            folder_name = file.replace(".srt", "")
-        elif file.lower().endswith(".zip") and zipFormat:
-            folder_name = file.replace(".zip", "")
-        else:
+        file_extension = os.path.splitext(file)[1].lower()
+        if file_extension not in formats:
             continue
-        folder_name = folder_name.replace(".", " ").replace("_", " ").replace("-", " ").replace("(", "").replace(")", "").replace("  ", " ")
-        folderWords = re.split(r'\s', folder_name)
-        # Serial or Movie? Let's Find out
-        folder_name = ""
-        serial = False
-        season = '01'
-        episode = '01'
-        firstS = True
-        for s in folderWords:
-            if (firstS):
-                firstS = False
-                folder_name += str(s) + " "
-                continue
-            if len(s) == 6:
-                if (s[0] == 'S' or s[0] == 's') and (s[3] == 'E' or s[3] == 'e') and (s[1].isdigit()):
-                    serial = True
-                    season = 'S' + str(s[1]) + str(s[2])
-                    episode = 'E' + str(s[4]) + str(s[5])
-                    if folder_name.endswith(" "):
-                        folder_name = folder_name[:-1]
-                    break
-            folder_name += str(s) + " "
 
-        #################################
-        if serial and serialFiles:
-            newDir = directory
-            newDir = newDir + "\\" + folder_name
-            try:
-                os.mkdir(newDir)
-            except OSError:
-                print("Fucking Error")
-            else:
-                print("Fucking Nice")
-            newDir = newDir + "\\" + season
-            try:
-                os.mkdir(newDir)
-            except OSError:
-                print("Fucking Error")
-            else:
-                print("Fucking Nice")
-            if episodeFolders:
-                newDir = newDir + "\\" + episode
-                try:
-                    os.mkdir(newDir)
-                except OSError:
-                    print("Fucking Error")
-                else:
-                    print("Fucking Nice")
-            os.rename(os.path.join(directory, file), newDir + "\\" + file)
-        if (not serial) and movieFiles:
-            folder_name = ""
-            firstS = True
-            year = 0000
-            name = ""
-            for s in folderWords:
-                if s.isdigit() and not firstS:
-                    if 1900 < int(s) < 3000:
-                        year = int(s)
-                        break
-                else:
-                    firstS = False
-                    name += str(s) + ' '
-                    continue
-            if name.endswith(' '):
-                name = name[0:-1]
-            folder_name = nameFormat
-            if yearInBracket:
-                folder_name = folder_name.replace('{year}', "(" + str(year) + ")")
-            else:
-                folder_name = folder_name.replace('{year}', str(year))
-            folder_name = folder_name.replace('{name}', str(name))
-            newDir = directory
-            newDir = newDir + "\\" + folder_name
-            try:
-                os.mkdir(newDir)
-            except OSError:
-                print(OSError)
+        new_directory = construct_directory_name(file, directory, name_format, year_in_bracket)
+        if not new_directory:
+            continue
 
-            os.rename(os.path.join(directory, file), newDir + "\\" + file)
+        try:
+            os.makedirs(new_directory, exist_ok=True)
+        except OSError as e:
+            print(f"Error creating directory {new_directory}: {e}")
+            continue
 
-    if sameName:
-        folders = []
-        for r, d, f in os.walk(directory):
-            for folder in d:
-                folders.append(os.path.join(r, folder))
-        for f in folders:
-            mkvName = ""
-            for file in os.listdir(f):
-                if file.lower().endswith(".mkv"):
-                    mkvName = file.replace(".mkv", ".srt")
-                    break
-                else:
-                    continue
-            for file in os.listdir(f):
-                if file.lower().endswith(".srt"):
-                    try:
-                        os.rename(os.path.join(f, file), f + "\\" + mkvName)
-                    except FileExistsError:
-                        print('Multiple subtitle')
-                    break
-                else:
-                    continue
+        os.rename(os.path.join(directory, file), os.path.join(new_directory, file))
+
+        if rename_subtitle and file_extension == FILE_TYPES['mkv']:
+            rename_subtitle_files(new_directory, file)
+
+
+def construct_directory_name(file, directory, name_format, year_in_bracket):
+    """Construct the directory name based on the file name and provided format."""
+    file_name_without_extension = os.path.splitext(file)[0]
+    file_name_parts = re.split(r'\s|\.', file_name_without_extension)
+
+    serial_info = parse_serial_info(file_name_parts)
+    if serial_info:
+        return construct_serial_directory_name(directory, serial_info, file_name_parts)
+
+    return construct_movie_directory_name(directory, file_name_parts, name_format, year_in_bracket)
+
+
+def parse_serial_info(file_name_parts):
+    """Parse season and episode information from file name parts."""
+    for part in file_name_parts:
+        match = SEASON_EPISODE_PATTERN.match(part)
+        if match:
+            return {
+                'season': match.group(1).upper() + match.group(2),
+                'episode': match.group(3).upper() + match.group(4)
+            }
+    return None
+
+
+def construct_serial_directory_name(directory, serial_info, file_name_parts):
+    """Construct directory name for serials."""
+    serial_name = ' '.join(
+        file_name_parts[:file_name_parts.index(serial_info['season'] + serial_info['episode'].lower())])
+    return os.path.join(directory, serial_name, serial_info['season'], serial_info['episode'])
+
+
+def construct_movie_directory_name(directory, file_name_parts, name_format, year_in_bracket):
+    """Construct directory name for movies."""
+    year = next((part for part in file_name_parts if part.isdigit() and 1900 < int(part) < 3000), None)
+    if not year:
+        return None
+
+    name = ' '.join(part for part in file_name_parts if part != year)
+    formatted_year = f"({year})" if year_in_bracket else year
+    folder_name = name_format.replace('{year}', formatted_year).replace('{name}', name)
+    return os.path.join(directory, folder_name)
+
+
+def rename_subtitle_files(directory, video_file_name):
+    """Rename subtitle files to match the video file name."""
+    video_name_without_extension = os.path.splitext(video_file_name)[0]
+    subtitle_name = video_name_without_extension + FILE_TYPES['srt']
+
+    for file in os.listdir(directory):
+        if file.lower().endswith(FILE_TYPES['srt']):
+            try:
+                os.rename(os.path.join(directory, file), os.path.join(directory, subtitle_name))
+            except FileExistsError:
+                print('Multiple subtitle files exist.')
+            break
+

@@ -3,7 +3,7 @@ import os
 from tkinter import *
 from tkinter import messagebox, filedialog
 from load_language import *
-from logic import createFolder, openAll
+from logic import create_folders_for_files, move_files_to_root_and_remove_empty_dirs
 
 
 def chooseDir():
@@ -156,13 +156,13 @@ if __name__ == '__main__':
     numberOfFilesVar = StringVar()
     numberOfFilesVar.set(startText)
     btn = Button(root, textvariable=chooseDirVar, command=chooseDir).pack(side=TOP, fill='both')
-    Button(root, text=unfolderString,command=lambda :openAll(chooseDirString)).pack(side=TOP, fill=X)
+    Button(root, text=unfolderString,command=lambda :move_files_to_root_and_remove_empty_dirs(chooseDirString)).pack(side=TOP, fill=X)
     chooseDirVar.set(chooseDirText)
     Frame(root, width=10, height=1, bd=0).pack(side=LEFT)
     Frame(root, width=10, height=1, bd=0).pack(side=RIGHT)
     Frame(root, width=5, height=5, bd=0).pack(side=TOP, fill=X)
     Button(root, text=quitText, command=root.quit).pack(side=last)
-    Button(root, textvariable=numberOfFilesVar,command=lambda :createFolder(chooseDirString,formatString.get(),var_mkvFormat,var_mp4Format,var_aviFormat,var_srtFormat,var_zipFormat,var_yearInBracket,var_sameName,var_serialFiles,var_movieFiles,var_episodeFolders)).pack(side=first)
+    Button(root, textvariable=numberOfFilesVar,command=lambda :create_folders_for_files(chooseDirString,formatString.get(),var_mkvFormat,var_mp4Format,var_aviFormat,var_srtFormat,var_zipFormat,var_yearInBracket,var_sameName,var_serialFiles,var_movieFiles,var_episodeFolders)).pack(side=first)
     Frame(root, width=1, height=35, bd=0).pack(side=BOTTOM, fill=X)
     root.title(nameOfProgram)
     root.mainloop()
